@@ -18,6 +18,11 @@ public class FileUI extends javax.swing.JFrame {
     private static Connection conn = null;
     private static Statement stmt = null;
     private static ResultSet rs = null;
+    private static int cntStud = 0;
+    private static int cntStudCourse = 0;
+    private static int cntCourseName = 0;
+    private static int cntExam = 0;
+    
 
     
     public FileUI() {
@@ -46,7 +51,6 @@ public class FileUI extends javax.swing.JFrame {
         btnCourseNames = new javax.swing.JButton();
         btnExam = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -103,14 +107,6 @@ public class FileUI extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setForeground(new java.awt.Color(76, 250, 100));
-        jButton2.setText("Display Current Database");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDisplayDB(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,9 +140,7 @@ public class FileUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(40, 40, 40)
-                .addComponent(jButton2)
-                .addGap(68, 68, 68))
+                .addGap(192, 192, 192))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,11 +165,9 @@ public class FileUI extends javax.swing.JFrame {
                     .addComponent(txtExam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExam)
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(27, 27, 27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(33, 33, 33))
         );
 
         pack();
@@ -190,13 +182,14 @@ public class FileUI extends javax.swing.JFrame {
         try
         {
             br = new BufferedReader(new FileReader(csvStud));
-                
+            int in = 0, out = 0;
             while((line = br.readLine()) != null)
             {
                 String str[] = line.split(splitAccTo);
                 try
                 {
-                    FileUI.addToDatabaseStudents(str);
+                   out = FileUI.addToDatabaseStudents(str);
+                   in++;
                 }
                     
                 catch(Exception e)
@@ -204,7 +197,7 @@ public class FileUI extends javax.swing.JFrame {
                    JOptionPane.showMessageDialog(null, e.toString(), "Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
-            JOptionPane.showMessageDialog(null, "Records added to database", "Students", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Records read: " + in + "\nRecords added to database: " + out + "\n Invalid records: " + (in - out) , "Students", JOptionPane.INFORMATION_MESSAGE);
         }
             
         catch(IOException ioe)
@@ -219,13 +212,14 @@ public class FileUI extends javax.swing.JFrame {
         try
         {
             br = new BufferedReader(new FileReader(csvStudCourse));
-                
+            int in = 0, out = 0;    
             while((line = br.readLine()) != null)
             {
                 String str[] = line.split(splitAccTo);
                 try
                 {
-                    FileUI.addToDatabaseStudCourses(str);
+                    out = FileUI.addToDatabaseStudCourses(str);
+                    in++;
                 }
                     
                 catch(Exception e)
@@ -233,7 +227,7 @@ public class FileUI extends javax.swing.JFrame {
                    JOptionPane.showMessageDialog(null, e.toString(), "Error1",JOptionPane.ERROR_MESSAGE);
                 }
             }
-            JOptionPane.showMessageDialog(null, "Records added to database", "Student Courses", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Records read: " + in + "\nRecords added to database: " + out + "\n Invalid records: " + (in - out), "Student Courses", JOptionPane.INFORMATION_MESSAGE);
         }
             
         catch(IOException ioe)
@@ -247,6 +241,7 @@ public class FileUI extends javax.swing.JFrame {
             
         try
         {
+            int in = 0, out = 0;
             br = new BufferedReader(new FileReader(csvCourseNames));
                 
             while((line = br.readLine()) != null)
@@ -254,7 +249,8 @@ public class FileUI extends javax.swing.JFrame {
                 String str[] = line.split(splitAccTo);
                 try
                 {
-                    FileUI.addToDatabaseCourseNames(str);
+                    out = FileUI.addToDatabaseCourseNames(str);
+                    in++;
                 }
                     
                 catch(Exception e)
@@ -262,7 +258,7 @@ public class FileUI extends javax.swing.JFrame {
                    JOptionPane.showMessageDialog(null, e.toString(), "Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
-            JOptionPane.showMessageDialog(null, "Records added to database", "Course Names", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Records read: " + in + "\nRecords added to database: " + out + "\n Invalid records: " + (in - out), "Course Names", JOptionPane.INFORMATION_MESSAGE);
         }
             
         catch(IOException ioe)
@@ -278,13 +274,14 @@ public class FileUI extends javax.swing.JFrame {
         try
         {
             br = new BufferedReader(new FileReader(csvExam));
-                
+            int in = 0, out = 0;    
             while((line = br.readLine()) != null)
             {
                 String str[] = line.split(splitAccTo);
                 try
                 {
-                    FileUI.addToDatabaseExam(str);
+                    out = FileUI.addToDatabaseExam(str);
+                    in++;
                 }
                     
                 catch(Exception e)
@@ -292,7 +289,7 @@ public class FileUI extends javax.swing.JFrame {
                    JOptionPane.showMessageDialog(null, e.toString(), "Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
-           JOptionPane.showMessageDialog(null, "Records added to database", "Exams", JOptionPane.INFORMATION_MESSAGE);
+           JOptionPane.showMessageDialog(null, "Records read: " + in + "\nRecords added to database: " + out + "\n Invalid records: " + (in - out), "Exams", JOptionPane.INFORMATION_MESSAGE);
         }
             
         catch(IOException ioe)
@@ -302,13 +299,18 @@ public class FileUI extends javax.swing.JFrame {
        
     }//GEN-LAST:event_btnUpload
 
-    public static void addToDatabaseStudents(String str[]) throws Exception
+    public static int addToDatabaseStudents(String str[]) throws Exception
     {   
-        
+        Student s = new Student(str);
+        String strx[] = s.transform();
         try
-        {              
-            String sql = "INSERT INTO Students VALUES('" + str[0] + "', '" + str[1] + "', '" + str[2] + "', '" + str[3] + "', '" + str[4] + "', '" + str[5] + "', '" + str[6] + "')";
-            stmt.executeUpdate(sql);            
+        {   
+            if(strx[0] != "Invalid StudentID" )
+            {
+                cntStud++;
+                String sql = "INSERT INTO Students VALUES('" + strx[0] + "', '" + strx[1] + "', '" + strx[2] + "', '" + strx[3] + "', '" + strx[4] + "', '" + strx[5] + "', '" + strx[6] + "')";
+                stmt.executeUpdate(sql);            
+            }
         }
         
         catch(Exception e)
@@ -316,15 +318,23 @@ public class FileUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        return cntStud;
     }
  
     
-    public static void addToDatabaseStudCourses(String str[]) throws Exception
+    public static int addToDatabaseStudCourses(String str[]) throws Exception
     {       
+        StudCourses sc = new StudCourses(str);
+        String strx[] = sc.transform();
+        
         try
-        {              
-            String sql = "INSERT INTO StudentCourses VALUES('" + str[0] + "', '" + str[1] + "')";
-            stmt.executeUpdate(sql);
+        {  
+            if(strx[0] != "Invalid StudentID" )
+            {
+                cntStudCourse++;
+                String sql = "INSERT INTO StudentCourses VALUES('" + strx[0] + "', '" + strx[1] + "')";
+                stmt.executeUpdate(sql);
+            }
         }
         
         catch(Exception e)
@@ -332,15 +342,22 @@ public class FileUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        return cntStudCourse;
     }
     
-    public static void addToDatabaseCourseNames(String str[]) throws Exception
-    {       
+    public static int addToDatabaseCourseNames(String str[]) throws Exception
+    {
+        CourseNames cn = new CourseNames(str);
+        String strx[] = cn.transform();
+        
         try
-        {              
-            String sql = "INSERT INTO CourseNames VALUES('" + str[0] + "', '" + str[1] + "')";
-            stmt.executeUpdate(sql);
-            
+        {   
+            if(strx[0] != "Invalid Course Code")
+            {
+                cntCourseName++;
+                String sql = "INSERT INTO CourseNames VALUES('" + strx[0] + "', '" + strx[1] + "')";
+                stmt.executeUpdate(sql);
+            }
         }
         
         catch(Exception e)
@@ -348,14 +365,22 @@ public class FileUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        return cntCourseName;
     }
     
-    public static void addToDatabaseExam(String str[]) throws Exception
+    public static int addToDatabaseExam(String str[]) throws Exception
     {       
+        Exam ex = new Exam(str);
+        String strx[] = ex.transform();
+        
         try
-        {              
-            String sql = "INSERT INTO Exams VALUES('" + str[0] + "', '" + str[1] + "', '" + str[2] + "')";
-            stmt.executeUpdate(sql);
+        {
+            if(strx[0] != "Invalid StudentID" )
+            {
+                cntExam++;
+                String sql = "INSERT INTO Exams VALUES('" + strx[0] + "', '" + strx[1] + "', '" + strx[2] + "')";
+                stmt.executeUpdate(sql);
+            }
         }
         
         catch(Exception e)
@@ -363,6 +388,7 @@ public class FileUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
+        return cntExam;
     }
 
     
@@ -425,70 +451,6 @@ public class FileUI extends javax.swing.JFrame {
             }
 
     }//GEN-LAST:event_btnExamActionPerformed
-
-    private void btnDisplayDB(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayDB
-
-        /*try
-        {
-            String sql = "SELECT * FROM Students";
-            rs = stmt.executeQuery(sql);
-            
-            System.out.println("STUDENTS TABLE");
-            while(rs.next())
-            {
-                int id = rs.getInt("StudentID");
-                String fn = rs.getString("FirstName");
-                String mn = rs.getString("MiddleName");
-                String ln = rs.getString("LastName");
-                String dob = rs.getString("DOB");
-                String addr = rs.getString("Address");
-                String sex = rs.getString("Sex");
-                System.out.println(id + " " + fn + " " + mn + " " + ln + " " + dob + " " + addr + " " + sex);
-            }
-            
-            System.out.println("\nSTUDENT COURSES TABLE");
-            
-            sql = "SELECT * FROM StudentCourses";
-            rs = stmt.executeQuery(sql);
-            
-            while(rs.next())
-            {
-                int id = rs.getInt("StudentID");
-                String cc = rs.getString("CourseCode");
-                System.out.println(id + " " + cc);
-            }
-            
-            System.out.println("\nCOURSE NAMES TABLE");
-            sql = "SELECT * FROM CourseNames";
-            rs = stmt.executeQuery(sql);
-                        
-            while(rs.next())
-            {
-                String cc = rs.getString("CourseCode");
-                String cn = rs.getString("CourseName");
-                System.out.println(cc + " " + cn);
-            }
-            
-            System.out.println("\nEXAMS TABLE");
-            sql = "SELECT * FROM Exams";
-            rs = stmt.executeQuery(sql);
-            
-            while(rs.next())
-            {
-                int id = rs.getInt("StudentID");
-                String cc = rs.getString("CourseCode");
-                int m = rs.getInt("Marks");
-                System.out.println(id + " " + cc + " " + m);
-            }                      
-        }
-        
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        */
-        
-    }//GEN-LAST:event_btnDisplayDB
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
 
@@ -568,7 +530,6 @@ public class FileUI extends javax.swing.JFrame {
     private javax.swing.JButton btnStudCourses;
     private javax.swing.JButton btnStudent;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -578,4 +539,245 @@ public class FileUI extends javax.swing.JFrame {
     private javax.swing.JTextField txtStudCourses;
     private javax.swing.JTextField txtStudent;
     // End of variables declaration//GEN-END:variables
+}
+
+class Student
+{
+    private String id,name,dob,addr,sex,mn;
+    
+    public Student()
+    {
+        
+    }
+    
+    public Student(String s[])
+    {
+        id = s[0];
+        name = s[1];
+        dob = s[2];
+        addr = s[3];
+        sex = s[4];
+        mn = "";
+    }
+    
+    public String[] transform()
+    {
+        String s[] = new String[7];
+        s[0] = validateStudID(id);
+        String ss[] = validateNames(name);
+        s[1] = ss[0];
+        s[2] = ss[1];
+        s[3] = ss[2];
+        s[4] = validateDOB(dob);
+        s[5] = validateAddr(addr);
+        s[6] = validateSex(sex);
+        
+        return s;
+    }          
+    
+    public String validateStudID(String s)
+    {
+        if(s.length() != 10 || !Character.isLetter(s.charAt(0)))
+        {
+            //invalid entry
+            //return
+            return "Invalid StudentID";
+        }
+        
+        for(int i=1; i<s.length(); i++)
+        {
+            if(!Character.isDigit(s.charAt(i)))
+            {
+                return "Invalid StudentID";
+            }
+        }
+        
+        if(Character.isLowerCase(s.charAt(0)))
+            s = s.toUpperCase();
+             
+        return s;
+    }
+    
+    private String[] validateNames(String s)
+    {
+        s = s.toUpperCase();
+        
+        String str[]  = s.split(" ");
+        
+        for(int i=0; i<str.length; i++)
+        {
+            for(int j=0; j<str[i].length(); j++)
+            {    
+                if(!Character.isLetter(str[i].charAt(j)) & str[i].charAt(j) != '.')
+                {
+                    str[i] = str[i].replace(str[i].charAt(j), '\0');
+                }
+            }
+                    
+        }
+        
+        String fn, mn, ln;
+        mn = ln = "";
+        fn = str[0];
+        if(str.length >= 3)
+        {
+            ln = str[str.length-1];
+            for(int i=1; i<str.length-1; i++)
+                mn = mn + str[i] + " ";
+        }
+        
+        else if(str.length == 2)
+            ln = str[1];
+       
+        
+        String strx[] = new String[3];
+        strx[0] = fn;
+        strx[1] = mn;
+        strx[2] = ln;
+        
+        return strx;
+    }
+    
+    private String validateDOB(String s)
+    {
+        if((s.charAt(2) != '.' & s.charAt(2) != '-' & s.charAt(2) != '/') || (s.charAt(2) != '.' & s.charAt(5) != '-' & s.charAt(5) != '/'))
+            return "Invalid DOB";
+            
+        char c1 = s.charAt(0);
+        char c2 = s.charAt(1);
+        String s1 = Character.toString(c1);
+        String s2 = Character.toString(c2);
+        String dd = s1 + s2;
+        c1 = s.charAt(3);
+        c2 = s.charAt(4);
+        s1 = Character.toString(c1);
+        s2 = Character.toString(c2);
+        
+        String mm = s1 + s2;
+        
+        if(Integer.parseInt(dd) < 1 || Integer.parseInt(dd) > 31)
+            return "Invalid DOB";
+        
+        if(Integer.parseInt(mm) >= 12 & Integer.parseInt(mm) <= 31)
+        {
+            String temp = dd;
+            dd = mm;
+            mm = temp;
+        }
+      
+        String dob = dd + s.charAt(2) + mm + s.charAt(5) + s.charAt(6) + s.charAt(7) + s.charAt(8) + s.charAt(9);
+        
+        return dob;
+    }
+    
+    private String validateAddr(String s)
+    {
+             
+        for(int i=0; i<s.length(); i++)
+        {
+           if(s.charAt(i) != '-' & s.charAt(i) != '.' & s.charAt(i) != '/' & !Character.isLetterOrDigit(s.charAt(i)))
+           {
+               return "Invalid address";
+           }
+        }
+        
+        return s;
+    }
+    
+    private String validateSex(String s)
+    {
+        s = s.toUpperCase();
+        return s;
+    }
+}
+
+class StudCourses 
+{
+    private String id, cc;
+    
+    public StudCourses()
+    {
+        
+    }
+    
+    public StudCourses(String s[])
+    {
+        id = s[0];
+        cc = s[1];
+    }
+    
+    public String[] transform()
+    {
+        String s[] = new String[2];
+        Student stud = new Student();
+        s[0] = stud.validateStudID(id);
+        s[1] = validateCourseCode(cc);
+        
+        return s;
+    }
+    
+    public String validateCourseCode(String s)
+    {
+        if(s.length() != 5 || !Character.isLetter(s.charAt(0)) || !Character.isLetter(s.charAt(1)) || !Character.isDigit(s.charAt(2)) || !Character.isDigit(s.charAt(3)) || !Character.isDigit(s.charAt(4)))
+            return "Invalid Course Code";
+        
+        return s;
+    }   
+}    
+
+class CourseNames
+{
+    private String cc, cn;
+    
+    public CourseNames(String str[])
+    {
+        cc = str[0];
+        cn = str[1];
+    }
+    
+    public String[] transform()
+    {
+        String s[] = new String[2];
+        StudCourses sc = new StudCourses();
+        s[0] = sc.validateCourseCode(cc);
+        s[1] = cn;
+        
+        return s;
+    }
+}
+
+class Exam
+{
+    private String id, cc, marks;
+    
+    public Exam(String str[])
+    {
+        id = str[0];
+        cc = str[1];
+        marks = str[2];
+    }
+    
+    public String[] transform()
+    {
+        String s[] = new String[3];
+        Student stud = new Student();
+        s[0] = stud.validateStudID(id);
+        StudCourses sc = new StudCourses();
+        s[1] = sc.validateCourseCode(cc);
+        s[2] = validateMarks(marks);
+        
+        return s;
+    }
+    
+    private String validateMarks(String s)
+    {
+        if(s.length() > 3)
+            return "Invalid entry of marks";
+        
+        int m = Integer.parseInt(s);
+        if(m >= 0 & m <= 100)
+            return s;
+        else
+            return "-- FAIL/ABSENT";
+    }
 }
